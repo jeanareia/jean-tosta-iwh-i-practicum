@@ -1,6 +1,7 @@
 const express = require('express');
 const axios = require('axios');
 const app = express();
+//I had to add dotenv so .env values could be read
 require('dotenv').config();
 
 app.set('view engine', 'pug');
@@ -16,7 +17,10 @@ app.get('/', async (req,res)=>{
     renderHome(req,res);
 });
 
+//Retrieves custom object properties values (not accessible from /crm/v3/objects/songs)
+//Required = song.properties.hs_object_id
 async function getSongProps(songID){
+    //List of every property intended to be read in this call
     const propertyList = "name,artist,album"
     const endpoint = `https://api.hubspot.com/crm/v3/objects/songs/${songID}?properties=${propertyList}`;
     const headers = {
@@ -27,7 +31,7 @@ async function getSongProps(songID){
     try {
         const resp = await axios.get(endpoint, { headers });
         const data = resp.data;
-        return data;
+        return data; //SONG obj JSON with its custom properties
     } catch (e) {
         e.message === 'HTTP request failed'
           ? console.error(JSON.stringify(e.response, null, 2))
@@ -35,6 +39,7 @@ async function getSongProps(songID){
       }
 };
 
+//This function was made for calling app.get('/') --> homepage
 async function renderHome(req,res){
     const endpoint = 'https://api.hubspot.com/crm/v3/objects/songs';
     const headers = {
@@ -44,26 +49,17 @@ async function renderHome(req,res){
 
     try{
         const resp = await axios.get(endpoint, { headers });
-        const data = resp.data.results;
-        var result = [];
+        const data = resp.data.results; //SONG JSON response but with NO CUSTOM prop value
+        var result = []; //empty array for saving each SONG JSON after retrieving SONG CUSTOM prop values
 
+        //Dealing with every promise from every object found in last axios.get call
         const promises = data.map(async song =>{
-            const songData = getSongProps(song.properties.hs_object_id);
+            const songData = getSongProps(song.properties.hs_object_id); //Must inform object ID
             return songData;
         });
-        const resolvedData = await Promise.all(promises);
-        resolvedData.forEach(song=> result.push(song));
+        const resolvedData = await Promise.all(promises); //Await for all promises created earlier
+        resolvedData.forEach(song=> result.push(song)); //Updates the empty array
 
-        /* it looks like promises were not finnished yet
-        data.forEach(song => {
-            getSongProps(song.properties.hs_object_id);
-            result.push(song);
-        });
-        */
-        result.forEach(item=>{
-            console.log(item.properties.name);
-        });
-        //console.log(result);
         res.render('homepage', { result });
     } catch (e) {
         e.message === 'HTTP request failed'
@@ -86,7 +82,7 @@ app.get('/update-cobj', async(req,res)=>{
 
 // TODO: ROUTE 3 - Create a new app.post route for the custom objects form to create or update your custom object data. Once executed, redirect the user to the homepage.
 app.post('/update-cobj', async (req,res)=>{
-    //console.log("--> " + req.body);
+    //Retrieves forms values
     const body = {
         properties: {
             "name": req.body.songName,
@@ -94,8 +90,7 @@ app.post('/update-cobj', async (req,res)=>{
             "album": req.body.albumName
         }
     };
-    //console.log(body);
-
+    
     const endpoint = 'https://api.hubspot.com/crm/v3/objects/songs';
     const headers = {
         Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
@@ -111,53 +106,7 @@ app.post('/update-cobj', async (req,res)=>{
         ? console.error(JSON.stringify(e.response, null, 2))
         : console.error(e)
     }
-
 });
-
-/** 
-* * This is sample code to give you a reference for how you should structure your calls. 
-
-* * App.get sample
-app.get('/contacts', async (req, res) => {
-    const contacts = 'https://api.hubspot.com/crm/v3/objects/contacts';
-    const headers = {
-        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
-        'Content-Type': 'application/json'
-    }
-    try {
-        const resp = await axios.get(contacts, { headers });
-        const data = resp.data.results;
-        res.render('contacts', { title: 'Contacts | HubSpot APIs', data });      
-    } catch (error) {
-        console.error(error);
-    }
-});
-
-* * App.post sample
-app.post('/update', async (req, res) => {
-    const update = {
-        properties: {
-            "favorite_book": req.body.newVal
-        }
-    }
-
-    const email = req.query.email;
-    const updateContact = `https://api.hubapi.com/crm/v3/objects/contacts/${email}?idProperty=email`;
-    const headers = {
-        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
-        'Content-Type': 'application/json'
-    };
-
-    try { 
-        await axios.patch(updateContact, update, { headers } );
-        res.redirect('back');
-    } catch(err) {
-        console.error(err);
-    }
-
-});
-*/
-
 
 // * Localhost
 app.listen(3000, () => console.log('Listening on http://localhost:3000'));
