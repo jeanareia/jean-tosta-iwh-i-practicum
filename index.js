@@ -34,6 +34,14 @@ app.get('/update-cobj', async(req,res)=>{
 // * Code for Route 3 goes here
 app.post('/update-cobj', async (req,res)=>{
     console.log("--> " + req.body);
+    const body = {
+        properties: {
+            "name": req.body.songName,
+            "artist": req.body.artistName,
+            "album": req.body.albumName
+        }
+    };
+    console.log(body);
 
 });
 
