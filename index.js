@@ -26,9 +26,12 @@ app.get('/', async (req,res)=>{
 
         data.forEach(song => {
             getSongProps(song.properties.hs_object_id);
+            result.push(song);
         });
-
-        console.log(data);
+        result.forEach(item=>{
+            console.log(item.properties.name);
+        });
+        //console.log(result);
         res.render('homepage');
     } catch (e) {
         e.message === 'HTTP request failed'
@@ -48,7 +51,6 @@ async function getSongProps(songID){
     try {
         const resp = await axios.get(endpoint, { headers });
         const data = resp.data;
-        console.log(data);
         return data;
     } catch (e) {
         e.message === 'HTTP request failed'
