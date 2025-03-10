@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 // * Please DO NOT INCLUDE the private app access token in your repo. Don't do this practicum in your normal account.
-const PRIVATE_APP_ACCESS = 'process.env.PRIVATE_APP_ACCESS';
+const PRIVATE_APP_ACCESS = process.env.PRIVATE_APP_ACCESS;
 
 // TODO: ROUTE 1 - Create a new app.get route for the homepage to call your custom object data. Pass this data along to the front-end and create a new pug template in the views folder.
 
@@ -33,7 +33,7 @@ app.get('/update-cobj', async(req,res)=>{
 
 // * Code for Route 3 goes here
 app.post('/update-cobj', async (req,res)=>{
-    console.log("--> " + req.body);
+    //console.log("--> " + req.body);
     const body = {
         properties: {
             "name": req.body.songName,
@@ -41,7 +41,23 @@ app.post('/update-cobj', async (req,res)=>{
             "album": req.body.albumName
         }
     };
-    console.log(body);
+    //console.log(body);
+
+    const endpoint = 'https://api.hubspot.com/crm/v3/objects/songs';
+    const headers = {
+        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+        'Content-Type': 'application/json'
+    };
+
+    try{
+        //missing code
+        console.log('Should POST now');
+    }
+    catch (e) {
+        e.message === 'HTTP request failed'
+        ? console.error(JSON.stringify(e.response, null, 2))
+        : console.error(e)
+    }
 
 });
 
