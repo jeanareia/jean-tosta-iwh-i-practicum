@@ -24,10 +24,19 @@ app.get('/', async (req,res)=>{
         const data = resp.data.results;
         var result = [];
 
+        const promises = data.map(async song =>{
+            const songData = getSongProps(song.properties.hs_object_id);
+            return songData;
+        });
+        const resolvedData = await Promise.all(promises);
+        resolvedData.forEach(song=> result.push(song));
+
+        /* it looks like promises were not finnished yet
         data.forEach(song => {
             getSongProps(song.properties.hs_object_id);
             result.push(song);
         });
+        */
         result.forEach(item=>{
             console.log(item.properties.name);
         });
