@@ -4,14 +4,17 @@ html(lang="en")
         title Update Custom Object Form | Integrating With HubSpot I Practicum.
         link(rel="stylesheet" href="/css/styles.css")
     body
-        h1 #{title}
-        <a href="/"> Return to the homepage</a>
+        .container-primary
+            h1 #{title}
+        .container-sec
+            <a href="/"> Return to the homepage</a>
 
-        form(method="POST")
-            label(for="songName") Song name
-            input(type="text" name="songName" required)
-            label(for="artistName") Artist name
-            input(type="text" name="artistName" required)
-            label(for="albumName") Album name
-            input(type="text" name="albumName" required)
-            input(type="submit" value="Submit")
+        .container-forms
+            form(method="POST")
+                label(for="songName") Song name
+                input(type="text" name="songName" required)
+                label(for="artistName") Artist name
+                input(type="text" name="artistName" required)
+                label(for="albumName") Album name
+                input(type="text" name="albumName" required)
+                input(type="submit" value="Submit")
