@@ -25,7 +25,7 @@ app.get('/', async (req,res)=>{
         var result = [];
 
         data.forEach(song => {
-            getSongProps(song);
+            getSongProps(song.properties.hs_object_id);
         });
 
         console.log(data);
@@ -46,7 +46,10 @@ async function getSongProps(songID){
     }
 
     try {
-        console.log('Now searching for custom objects properties values')
+        const resp = await axios.get(endpoint, { headers });
+        const data = resp.data;
+        console.log(data);
+        return data;
     } catch (e) {
         e.message === 'HTTP request failed'
           ? console.error(JSON.stringify(e.response, null, 2))
