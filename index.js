@@ -13,6 +13,29 @@ const PRIVATE_APP_ACCESS = process.env.PRIVATE_APP_ACCESS;
 
 // TODO: ROUTE 1 - Create a new app.get route for the homepage to call your custom object data. Pass this data along to the front-end and create a new pug template in the views folder.
 app.get('/', async (req,res)=>{
+    renderHome(req,res);
+});
+
+async function getSongProps(songID){
+    const propertyList = "name,artist,album"
+    const endpoint = `https://api.hubspot.com/crm/v3/objects/songs/${songID}?properties=${propertyList}`;
+    const headers = {
+        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
+        'Content-Type': 'application/json'
+    }
+
+    try {
+        const resp = await axios.get(endpoint, { headers });
+        const data = resp.data;
+        return data;
+    } catch (e) {
+        e.message === 'HTTP request failed'
+          ? console.error(JSON.stringify(e.response, null, 2))
+          : console.error(e)
+      }
+};
+
+async function renderHome(req,res){
     const endpoint = 'https://api.hubspot.com/crm/v3/objects/songs';
     const headers = {
         Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
@@ -47,25 +70,6 @@ app.get('/', async (req,res)=>{
         ? console.error(JSON.stringify(e.response, null, 2))
         : console.error(e)
     }
-});
-
-async function getSongProps(songID){
-    const propertyList = "name,artist,album"
-    const endpoint = `https://api.hubspot.com/crm/v3/objects/songs/${songID}?properties=${propertyList}`;
-    const headers = {
-        Authorization: `Bearer ${PRIVATE_APP_ACCESS}`,
-        'Content-Type': 'application/json'
-    }
-
-    try {
-        const resp = await axios.get(endpoint, { headers });
-        const data = resp.data;
-        return data;
-    } catch (e) {
-        e.message === 'HTTP request failed'
-          ? console.error(JSON.stringify(e.response, null, 2))
-          : console.error(e)
-      }
 };
 
 // TODO: ROUTE 2 - Create a new app.get route for the form to create or update new custom object data. Send this data along in the next route.
@@ -100,7 +104,7 @@ app.post('/update-cobj', async (req,res)=>{
 
     try{
         await axios.post(endpoint, body, { headers });
-        res.render('homepage');
+        renderHome(req,res);
     }
     catch (e) {
         e.message === 'HTTP request failed'
