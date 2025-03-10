@@ -56,3 +56,32 @@ input[type="submit"] {
     padding: .375rem 1rem;
     margin-top: 10px;
 }
+
+.container-table{
+    border: 1px;
+    border-style: none;
+}
+
+.container-table-header{
+    background-color: #fec0cb;
+    color: #000000;
+    font-weight: bold;
+    text-align: center;
+}
+
+.container-table-cell{
+    border: 1px;
+    border-style: outset;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.container-forms{
+    display: flex;
+    flex-direction: column;
+    width: 40%;
+}
+
+.container-forms form{
+    display: grid;
+}

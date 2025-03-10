@@ -2,16 +2,18 @@ doctype html
 html(lang="en")
     head
         title Custom Object Table
-        link(rel="stylesheet" href="/css/styles.css")
+        link(rel="stylesheet" href="/css/style.css")
     body
         h1 Custom Object Table
         <a href="update-cobj"> Add to this table</a>
-        <table>
-            <tr>
+        <table class="container-table">
+            <tr class="container-table-header">
                 <td>Song name</td> <td>Artist</td> <td>Album</td>
             </tr>
             each song in result
                 <tr>
-                    <td>#{song.properties.name}</td> <td>#{song.properties.artist}</td> <td>#{song.properties.album}</td>
+                    <td class="container-table-cell">#{song.properties.name}</td>
+                    <td class="container-table-cell">#{song.properties.artist}</td>
+                    <td class="container-table-cell">#{song.properties.album}</td>
                 </tr>
         </table>
