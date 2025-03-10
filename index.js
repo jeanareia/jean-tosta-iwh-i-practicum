@@ -41,7 +41,7 @@ app.get('/', async (req,res)=>{
             console.log(item.properties.name);
         });
         //console.log(result);
-        res.render('homepage');
+        res.render('homepage', result);
     } catch (e) {
         e.message === 'HTTP request failed'
         ? console.error(JSON.stringify(e.response, null, 2))
