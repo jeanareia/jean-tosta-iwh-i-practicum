@@ -20,12 +20,10 @@ app.get('/', async (req,res)=>{
         'Content-Type': 'application/json'
     }
 
-    console.log(PRIVATE_APP_ACCESS);
     try{
-        //console.log('--> about to GET')
-        //const resp = await axios.get(endpoint, { headers });
-        //const data = resp.data.results;
-        //console.log(data);
+        const resp = await axios.get(endpoint, { headers });
+        const data = resp.data.results;
+        console.log(data);
         res.render('homepage');
     } catch (e) {
         e.message === 'HTTP request failed'
