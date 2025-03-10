@@ -10,7 +10,8 @@ html(lang="en")
             <tr>
                 <td>Song name</td> <td>Artist</td> <td>Album</td>
             </tr>
-            <tr>
-                <td>aaaa</td> <td>bbbb</td> <td>ccc</td>
-            </tr>
+            each song in result
+                <tr>
+                    <td>#{song.properties.name}</td> <td>#{song.properties.artist}</td> <td>#{song.properties.album}</td>
+                </tr>
         </table>
