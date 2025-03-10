@@ -100,7 +100,7 @@ app.post('/update-cobj', async (req,res)=>{
 
     try{
         await axios.post(endpoint, body, { headers });
-        console.log('Should POST now');
+        res.render('homepage');
     }
     catch (e) {
         e.message === 'HTTP request failed'
