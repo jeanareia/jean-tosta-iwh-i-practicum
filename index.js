@@ -99,7 +99,7 @@ app.post('/update-cobj', async (req,res)=>{
     };
 
     try{
-        //missing code
+        await axios.post(endpoint, body, { headers });
         console.log('Should POST now');
     }
     catch (e) {
